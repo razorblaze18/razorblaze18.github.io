@@ -104,6 +104,17 @@ html.nosplash #splash { display: none; }
 #splash.go .sp-cols i { height: 1px; min-height: 0; }
 #splash.go .sp-cols i:nth-child(2) { transition-delay: .2s; }
 #splash.go .sp-cols i:nth-child(3) { transition-delay: .4s; }
+/* page transitions: arriving from another page, the curtain opens without the name and a little faster */
+html.pt-in #splash .sp-n { display: none; }
+html.pt-in #splash .sp-cols i { transition-duration: .8s; }
+html.pt-in #splash.go .sp-cols i:nth-child(2) { transition-delay: .1s; }
+html.pt-in #splash.go .sp-cols i:nth-child(3) { transition-delay: .2s; }
+/* leaving: the same three white columns rise from the bottom and cover the page */
+.pt { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; z-index: 95; display: flex; align-items: flex-end; pointer-events: none; }
+.pt i { flex: 1 0 0; height: 0; margin-right: -1px; background: var(--white); transition: height .6s var(--curtain); }
+.pt.on i { height: calc(100vh + 1px); }
+.pt.on i:nth-child(2) { transition-delay: .08s; }
+.pt.on i:nth-child(3) { transition-delay: .16s; }
 #splash.go .sp-n { opacity: 0; }
 @keyframes sp-fail { to { visibility: hidden; } }
 
@@ -512,22 +523,19 @@ html.lenis, html.lenis body { height: auto; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
 .lenis.lenis-smooth iframe { pointer-events: none; }
 html.motion [data-m] { transition: opacity var(--sp-reveal-t) var(--sp-reveal-e), transform var(--sp-reveal-t) var(--sp-reveal-e); }
-html.motion [data-m="r3"] { opacity: 0; transform: translateY(40px) skewY(3deg); }
-html.motion [data-m="r6"] { opacity: 0; transform: translateY(40px) skewY(6deg); }
-html.motion [data-m="r20"] { opacity: 0; transform: translateY(20px) skewY(3deg); }
 html.motion [data-m="t40"] { opacity: 0; transform: translateY(40px); }
 html.motion [data-m="t20"] { opacity: 0; transform: translateY(20px); }
-html.motion [data-m="foot"] { opacity: 0; transform: translateY(-280px); }
 html.motion [data-m^="h"] { transition-duration: var(--sp-hero-t); transition-timing-function: var(--sp-hero-e); }
 html.motion [data-m="h70"] { opacity: 0; transform: translateY(70px); }
 html.motion [data-m="h20"] { opacity: 0; transform: translateY(20px); }
 html.motion [data-m="h200"] { opacity: 0; transform: translateY(200px); }
 html.motion [data-m].in { opacity: 1; transform: none; }
-html.m-prep [data-m], html.m-prep .ph img { transition: none !important; }
+html.m-prep [data-m] { transition: none !important; }
 html.motion .hero-tag .tag:not(.lined) { opacity: 0; }
 .tag .tl { display: block; }
-html.motion .ph img { transform: scale(1.25); transition: transform var(--sp-photo-t) var(--sp-photo-e); }
-html.motion .ph.in img { transform: none; }
+/* reveals, photo zoom and the footer curtain are scroll-linked: site.js writes their styles every frame (no CSS transition) */
+[data-s] { will-change: transform, opacity; }
+.ph img { will-change: transform; }
 
 @media (prefers-reduced-motion: reduce) {
   #splash { display: none !important; }

@@ -1,6 +1,7 @@
 /* Motion rebuilt from the Framer project with the same values: three-column splash, hero and tagline entrances,
-   scroll transforms (reveals that reverse below the trigger line), cursor variants, project image cursor, process track,
+   scroll transforms (scroll-linked, mapped the way Framer's runtime does), cursor variants, project image cursor, process track,
    photo zoom, footer curtain, case-study nav and cover parallax, Lenis smooth scroll (Framer Smooth Scroll, intensity 11).
+   Added on top of Framer: page transitions with the splash columns, and a slow drift on the hero name.
    Also the local clock and present mode (P or the Present button, arrows move, Esc exits, ?present opens it). */
 (function () {
   var d = document, root = d.documentElement, W = window;
@@ -58,13 +59,52 @@
   if (!presentURL) lenisOn();
 
   // ---------------------------------------------------------------- splash: after 1s the columns fold up (CSS: 1s each, 0.2s apart)
+  // arriving from another page of the site (page transition), the curtain opens at once and without the name
   var splash = d.getElementById('splash');
+  var fromNav = root.classList.contains('pt-in');
+  try { sessionStorage.removeItem('pt'); } catch (e) {}
   var withSplash = !!splash && motion && !presentURL;
-  var lead = withSplash ? 0 : -1.6;
+  var lead = withSplash ? (fromNav ? -1.45 : 0) : -1.6;
   if (splash && !withSplash) splash.parentNode.removeChild(splash);
   if (withSplash) {
-    setTimeout(function () { splash.classList.add('go'); }, Math.max(0, 1000 - (now() - t0)));
-    setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 2600);
+    setTimeout(function () { splash.classList.add('go'); }, Math.max(0, (fromNav ? 120 : 1000) - (now() - t0)));
+    setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, fromNav ? 1300 : 2600);
+  }
+
+  // ---------------------------------------------------------------- page transitions: the same white columns close over the page, then it changes
+  if (motion) {
+    var leaving = false;
+    d.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+      if (root.classList.contains('presenting') || leaving) return;
+      var url; try { url = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
+      if (url.origin !== location.origin || !/(\.html|\/)$/.test(url.pathname)) return;
+      if (url.pathname === location.pathname) return;               // same page, anchors scroll as usual
+      e.preventDefault(); leaving = true;
+      var c = d.createElement('div'); c.className = 'pt'; c.setAttribute('aria-hidden', 'true');
+      c.innerHTML = '<i></i><i></i><i></i>'; d.body.appendChild(c);
+      void c.offsetWidth; c.classList.add('on');
+      try { sessionStorage.setItem('pt', '1'); } catch (err) {}
+      setTimeout(function () { location.href = url.href; }, 780);
+    });
+    W.addEventListener('pageshow', function (e) {
+      if (!e.persisted) return;                                       // back/forward cache: lift the curtain again
+      leaving = false;
+      $('.pt').forEach(function (c) { c.parentNode.removeChild(c); });
+    });
+  }
+
+  // ---------------------------------------------------------------- hero depth: the name drifts down at 30% of the scroll while Work slides over it
+  var heroW = d.querySelector('.hero-w');
+  if (heroW && motion) {
+    var heroDrift = function () {
+      var y = W.scrollY;
+      if (y > W.innerHeight * 1.5) return;
+      heroW.style.transform = y > 0 ? 'translate3d(0,' + (y * 0.3).toFixed(1) + 'px,0)' : '';
+    };
+    W.addEventListener('scroll', heroDrift, { passive: true }); heroDrift();
   }
 
   // hero name sizes come from CSS (Framer's runtime auto-fit, measured as a share of the title width)
@@ -99,45 +139,91 @@
     $('[data-cover]').forEach(function (el) { timed(el, 'h200', 1.8); });
 
     var small = bp() === 'S';
-    var MID = [
+    // Framer Scroll Transforms ("Layer in View"): scroll-linked, not triggered. Framer's runtime maps progress with
+    // offset ["start end", "end end"]: 0 when the layer's top meets the bottom of the screen, 1 when its bottom does.
+    // Values are clamped, then smoothed by the effect's spring when it has one (the footer has none, so it tracks the scroll exactly).
+    var SCRUB = [
       ['.about-lab h2, .about-r > p, .about-r > .btn', 'r3'],
       ['.plist .prow-in', 'r6'],
       ['.mlist .mrow, .mlist .mimg', 'r6'],
       ['.exp .top p, .exp .bottom > .btn, .svc-t, .svc-p, .clock .rcol p', 'r3'],
       ['.xpc p, .xpd', small ? 'r20' : 'r3'],
       ['[data-row]', 'r3'],
-      ['.slide .s-label', 't20'],
-      ['.slide .s-h, .next .big-link', 't40'],
-      ['.slide .s-p, .slide .note, .card, .nums > div, .steps li, .quotes blockquote, .ins li, .callout, .next .row2', 'r3']
+      ['.slide .s-p, .slide .note, .card, .nums > div, .steps li, .quotes blockquote, .ins li, .callout, .next .row2', 'r3'],
+      ['.ph', 'ph'],
+      ['.foot', 'foot']
     ];
-    if (small) MID.push(['.lsec .lab h2', 'r3'], ['.pi-n, .pi-h, .pi-p', 'r20']);
-    var START = [['.foot', 'foot']];
-    var mids = [], starts = $('.ph');
-    MID.forEach(function (r) { $(r[0]).forEach(function (el) { if (!el.hasAttribute('data-m')) { el.setAttribute('data-m', r[1]); mids.push(el); } }); });
-    START.forEach(function (r) { $(r[0]).forEach(function (el) { el.setAttribute('data-m', r[1]); starts.push(el); }); });
+    if (small) SCRUB.push(['.lsec .lab h2', 'r3'], ['.pi-n, .pi-h, .pi-p', 'r20']);
+    // from-states (to-state is always identity); spring = the effect's transition
+    var FROM = {
+      r3: { o: 0, y: 40, sk: 3, sp: [300, 60, 0.1] }, r6: { o: 0, y: 40, sk: 6, sp: [300, 60, 0.1] },
+      r20: { o: 0, y: 20, sk: 3, sp: [300, 60, 0.1] }, ph: { s: 1.25, sp: [400, 60, 1] }, foot: { o: 0, y: -280 }
+    };
+    // Framer Appear effects ("Layer in View", play once): the case-study titles
+    var ONCE = [['.slide .s-label', 't20'], ['.slide .s-h, .next .big-link', 't40']];
+
+    var scrubs = [];
+    SCRUB.forEach(function (r) {
+      $(r[0]).forEach(function (el) {
+        if (el.hasAttribute('data-s') || el.hasAttribute('data-m')) return;
+        el.setAttribute('data-s', r[1]);
+        var f = FROM[r[1]];
+        scrubs.push({ el: el, tg: r[1] === 'ph' ? el.querySelector('img') : el, f: f, sp: f.sp ? new Spring(f.sp[0], f.sp[1], f.sp[2]) : null, top: 0, h: 1, out: '' });
+      });
+    });
+    var docTop = function (el) { var t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
+    var measureScrubs = function () { scrubs.forEach(function (o) { o.top = docTop(o.el); o.h = Math.max(1, o.el.offsetHeight); }); };
+    var paint = function (o, p) {
+      var f = o.f, q = 1 - p, css;
+      if (f.s) css = 'scale(' + (1 + (f.s - 1) * q).toFixed(4) + ')';
+      else css = 'translate3d(0,' + (f.y * q).toFixed(2) + 'px,0)' + (f.sk ? ' skewY(' + (f.sk * q).toFixed(3) + 'deg)' : '');
+      var op = f.o === 0 ? p.toFixed(3) : '';
+      var key = css + op;
+      if (key === o.out) return;
+      o.out = key;
+      if (o.tg) { o.tg.style.transform = (p >= 0.9995 && !f.s) ? 'none' : css; if (op) o.tg.style.opacity = op; }
+    };
+    var progress = function (o, y, vh) { return Math.min(1, Math.max(0, (y + vh - o.top + 1.5) / o.h)); };   // 1.5px slack: the page end rounds
+    var scrubStep = function (dt) {
+      var y = W.scrollY, vh = W.innerHeight, moving = false;
+      for (var i = 0; i < scrubs.length; i++) {
+        var o = scrubs[i], p = progress(o, y, vh);
+        if (o.sp) { o.sp.to = p; if (o.sp.x !== p || o.sp.v) { if (o.sp.step(dt)) moving = true; } paint(o, o.sp.x); }
+        else paint(o, p);
+      }
+      return moving;
+    };
+    // finer settle threshold than the cursor springs: these run on 0..1
+    scrubs.forEach(function (o) { if (o.sp) o.sp.step = function (dt) {
+      var n = Math.max(1, Math.ceil(dt / 0.001)), h = dt / n;
+      for (var i = 0; i < n; i++) { var a = (-this.k * (this.x - this.to) - this.c * this.v) / this.m; this.v += a * h; this.x += this.v * h; }
+      if (Math.abs(this.x - this.to) < 0.0005 && Math.abs(this.v) < 0.005) { this.x = this.to; this.v = 0; return false; }
+      return true;
+    }; });
+    var settle = function () { var y = W.scrollY, vh = W.innerHeight; scrubs.forEach(function (o) { var p = progress(o, y, vh); if (o.sp) o.sp.snap(p); paint(o, p); }); };
+    measureScrubs(); settle();
+    var kick = function () { run(scrubStep); };
+    W.addEventListener('scroll', kick, { passive: true });
+    var remeasure = function () { measureScrubs(); kick(); };
+    W.addEventListener('resize', remeasure);
+    W.addEventListener('load', remeasure);
+    if (d.fonts && d.fonts.ready) d.fonts.ready.then(remeasure);
+    if (W.ResizeObserver) new ResizeObserver(function () { remeasure(); }).observe(d.body);
+
+    var onces = [];
+    ONCE.forEach(function (r) { $(r[0]).forEach(function (el) { if (!el.hasAttribute('data-m') && !el.hasAttribute('data-s')) { el.setAttribute('data-m', r[1]); onces.push(el); } }); });
 
     void root.offsetWidth;
     root.classList.remove('m-prep');
     raf2(function () { pending.forEach(show); });
 
     if ('IntersectionObserver' in W) {
-      var watch = function (els, margin) {
-        var io = new IntersectionObserver(function (es) {
-          es.forEach(function (e) {
-            var line = e.rootBounds ? e.rootBounds.bottom : W.innerHeight;
-            if (e.isIntersecting || e.boundingClientRect.top < line) show(e.target);
-            else if (!root.classList.contains('presenting')) hide(e.target);
-          });
-        }, { rootMargin: margin, threshold: 0 });
-        els.forEach(function (el) { io.observe(el); });
-      };
-      watch(mids, '0px 0px -50% 0px');   // viewport "middle"
-      watch(starts, '0px');               // viewport "start"
-      W.addEventListener('scroll', function () {
-        if (W.innerHeight + W.scrollY >= root.scrollHeight - 4) mids.forEach(function (el) { if (el.getBoundingClientRect().top < W.innerHeight) show(el); });
-      }, { passive: true });
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting || e.boundingClientRect.top < 0) { show(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0 });
+      onces.forEach(function (el) { io.observe(el); });
     } else {
-      mids.concat(starts).forEach(show);
+      onces.forEach(show);
     }
 
     // hero tagline: Framer text effect, one line at a time from 2s, 0.05s apart

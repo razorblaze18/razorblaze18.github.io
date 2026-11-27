@@ -268,7 +268,8 @@
       $('.plist .prow').forEach(function (r) { var i = new Image(); i.src = r.getAttribute('data-img'); });
     }
     var seen = false, mode = '', curLi = null;
-    var dy = { '': -2, link: 2, mail: -2, img: -2 };                         // placement bottom + Framer offsets (-10, -18, -96)
+    var dy = { '': -2, link: 2, mail: -2, img: -2, drag: -2 };
+    var curB = cur.querySelector('b');                         // placement bottom + Framer offsets (-10, -18, -96)
     var follow = function (dt) {
       var a = cx.step(dt), b = cy.step(dt);
       cur.style.transform = 'translate3d(' + cx.x + 'px,' + (cy.x + dy[mode]) + 'px,0)';
@@ -292,7 +293,8 @@
         }
       }
       if (m === mode) return;
-      cur.classList.remove('link', 'mail', 'img'); if (m) cur.classList.add(m); mode = m;
+      cur.classList.remove('link', 'mail', 'img', 'drag'); if (m) cur.classList.add(m); mode = m;
+      curB.textContent = m === 'drag' ? 'Drag' : 'Email';
     };
     d.addEventListener('mousemove', function (e) {
       cx.to = e.clientX; cy.to = e.clientY;
@@ -304,10 +306,38 @@
       var t = e.target && e.target.closest ? e.target : (e.target && e.target.parentElement);
       if (!t || !t.closest) return;
       var row = t.closest('.plist .prow');
-      setMode(row ? 'img' : t.closest('.foot-t') ? 'mail' : t.closest('a, button, [role="button"]') ? 'link' : '', row);
+      setMode(row ? 'img' : t.closest('.foot-t') ? 'mail' : t.closest('.ba-range') ? 'drag' : t.closest('a, button, [role="button"]') ? 'link' : '', row);
     });
     d.addEventListener('mouseout', function (e) { if (!e.relatedTarget) { cur.classList.remove('on'); seen = false; setMode(''); } });
   }
+
+  // ---------------------------------------------------------------- before / after frames
+  $('[data-ba]').forEach(function (fig) {
+    var st = fig.querySelector('.ba-stage'), r = fig.querySelector('.ba-range'), touched = false;
+    var set = function (v) { st.style.setProperty('--p', v + '%'); };
+    r.addEventListener('input', function () { touched = true; set(r.value); });
+    r.addEventListener('pointerdown', function () { touched = true; st.classList.add('drag'); });
+    var up = function () { st.classList.remove('drag'); if (root.classList.contains('presenting')) r.blur(); };   // arrows go back to the slides
+    r.addEventListener('pointerup', up); r.addEventListener('pointercancel', up);
+    // the first time it comes into view, the line sweeps across once so it reads as something to drag
+    if (motion && 'IntersectionObserver' in W) {
+      var seenBa = new IntersectionObserver(function (es) {
+        if (!es[0].isIntersecting) return;
+        seenBa.disconnect();
+        var t0b = 0;
+        run(function () {
+          if (touched) return false;
+          if (!t0b) t0b = now();
+          var t = Math.min(1, (now() - t0b) / 1600);
+          var v = 50 + 28 * Math.sin(t * Math.PI) * (1 - t * 0.35);      // out to the right and back
+          set(v.toFixed(2)); r.value = v;
+          if (t >= 1) { set(50); r.value = 50; return false; }
+          return true;
+        });
+      }, { threshold: 0.6 });
+      seenBa.observe(st);
+    }
+  });
 
   // ---------------------------------------------------------------- process: scroll target transform, x 0 -> end, spring 400/50/0.1
   var proc = d.querySelector('.process'), track = proc && proc.querySelector('.track'), pin = proc && proc.querySelector('.proc-pin');

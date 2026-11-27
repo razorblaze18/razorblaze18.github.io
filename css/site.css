@@ -223,3 +223,9 @@ html.presenting .hud {
 .hud button:hover { border-color: var(--fg); }
 .hud .exit { width: auto; padding: 0 12px; }
 @media (max-width: 640px) { .hud .keys { display: none; } }
+
+/* smaller links under the featured projects */
+.more { font-size: 13px; color: var(--muted); margin: 0; }
+.more a { color: var(--fg); margin-left: 14px; }
+.more a:hover { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+html.presenting .more { margin-top: 5vh; }

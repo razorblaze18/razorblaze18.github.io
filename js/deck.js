@@ -1,6 +1,20 @@
 /* Present mode: every .slide becomes one full screen.
    P or the Present button starts it, arrows / space / page keys move,
    Esc or Exit ends it. ?present in the URL opens straight into it. */
+/* Hero line types itself once, like the old MyPortfolio site. */
+(function () {
+  var el = document.querySelector('[data-type]');
+  if (!el) return;
+  var full = el.textContent;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  el.textContent = '';
+  var i = 0;
+  (function tick() {
+    el.textContent = full.slice(0, ++i);
+    if (i < full.length) setTimeout(tick, full[i - 1] === ' ' ? 70 : 42);
+  })();
+})();
+
 (function () {
   var root = document.documentElement;
   var slides = [].slice.call(document.querySelectorAll('.slide'));
@@ -10,11 +24,11 @@
   hud.className = 'hud';
   hud.setAttribute('aria-live', 'polite');
   hud.innerHTML =
-    '<span class="keys">Arrow keys to move</span>' +
+    '<span class="keys">arrow keys to move.</span>' +
     '<button type="button" class="prev" aria-label="Previous slide">&#8593;</button>' +
     '<span class="count">1 / ' + slides.length + '</span>' +
     '<button type="button" class="nxt" aria-label="Next slide">&#8595;</button>' +
-    '<button type="button" class="exit">Exit</button>';
+    '<button type="button" class="exit">exit.</button>';
   document.body.appendChild(hud);
   var countEl = hud.querySelector('.count');
 

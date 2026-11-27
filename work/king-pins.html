@@ -3,203 +3,136 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>King Pins booking system · Mudit Dhangar</title>
+<title>king pins. mudit dhangar</title>
 <meta name="description" content="How Mudit Dhangar designed and built the King Pins website, booking system and staff app on his own with Claude Code.">
-<meta property="og:title" content="King Pins booking system · Mudit Dhangar">
+<meta property="og:title" content="king pins. mudit dhangar">
+<meta property="og:description" content="How Mudit Dhangar designed and built the King Pins website, booking system and staff app on his own with Claude Code.">
 <meta property="og:image" content="https://razorblaze18.github.io/img/kp-hero.webp">
-<meta name="theme-color" content="#07070d">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2307070d'/%3E%3Ctext x='50' y='74' font-family='Impact,Arial Narrow,sans-serif' font-size='68' text-anchor='middle' fill='%23ff4fa3'%3EM%3C/text%3E%3C/svg%3E">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230f0f0f'/%3E%3Ctext x='50' y='66' font-family='monospace' font-weight='700' font-size='54' text-anchor='middle' fill='%23ffffff'%3Em.%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/site.css?v=4">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css?v=5">
 </head>
-<body style="--c: var(--pink)">
-<a class="skip" href="#start">Skip to the case study</a>
-
+<body>
+<a class="skip" href="#start">Skip to content</a>
 <header class="bar">
-  <a class="me" href="../">Mudit <span>Dhangar</span></a>
+  <a class="me" href="../">mudit.</a>
   <nav aria-label="Main">
-    <a href="../#work">All work</a>
-    <button class="btn btn-present" type="button" data-present title="Present this case study as slides (P)">
-      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2.5v11l9-5.5z"/></svg>Present
-    </button>
+    <a href="../#work">work.</a>
+    <a class="hide-sm" href="../#about">about me.</a>
+    <a class="hide-sm" href="../#contact">contact.</a>
+    <button type="button" data-present title="Show this page as slides (P)">present.</button>
   </nav>
 </header>
-
 <main id="start">
-  <section class="slide s-title">
-    <div class="wrap">
-      <h1 class="stack"><span class="c-pink">King Pins.</span><span class="c-cyan">Booking</span><span class="c-cream">system.</span></h1>
-      <p class="lede">King Pins is a bowling, pool and snooker venue in North Vancouver. I designed and built its new website, booking system and staff app on my own, with Claude Code.</p>
-      <dl class="meta">
-        <div><dt>Role</dt><dd>Product design and build, solo</dd></div>
-        <div><dt>Timeline</dt><dd>May 2026 to now</dd></div>
-        <div><dt>Live</dt><dd>4 September 2026, <a href="https://www.kingpinsbowl.ca/">kingpinsbowl.ca</a></dd></div>
-        <div><dt>Built with</dt><dd>Claude Code, vanilla JS, Firebase, Stripe</dd></div>
-      </dl>
-    </div>
-  </section>
-
   <section class="slide">
     <div class="wrap">
-      <h2>The first seven weeks.</h2>
-      <div class="numbers">
-        <div style="--c: var(--pink)"><b>CA$62k</b><span>taken online through the new system</span></div>
-        <div style="--c: var(--cyan)"><b>~450</b><span>paid orders</span></div>
-        <div style="--c: var(--yellow)"><b>&minus;1.3%</b><span>online revenue against the same weeks last year, straight after switching platforms</span></div>
-      </div>
+      <h1 class="cs-title">king pins.</h1>
+      <p class="lede">I designed and built a new website, booking system and staff app for a bowling, pool and snooker venue in North Vancouver. On my own, with Claude Code.</p>
+      <dl class="meta"><div><dt>role</dt><dd>Product design and build, solo</dd></div><div><dt>timeline</dt><dd>May 2026 to now</dd></div><div><dt>live</dt><dd>4 September 2026, <a href="https://www.kingpinsbowl.ca/">kingpinsbowl.ca</a></dd></div><div><dt>built with</dt><dd>Claude Code, vanilla JS, Firebase, Stripe</dd></div></dl>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <p class="label">results.</p>
+      <h2>The first seven weeks after launch.</h2>
+      <div class="nums"><div><b>CA$62k</b><span>taken online through the new system</span></div><div><b>~450</b><span>paid orders</span></div><div><b>&minus;1.3%</b><span>online revenue against the same weeks last year, straight after switching platforms</span></div></div>
       <p class="note">From the venue's Stripe dashboard, 15 September to 4 November 2026, compared with the same dates in 2025.</p>
     </div>
   </section>
-
   <section class="slide">
     <div class="wrap">
-      <h2>The problem.</h2>
-      <p class="lede">The old WooCommerce booking let guests book any package at any time, even food packages for hours when the kitchen was closed.</p>
-      <div class="cols" style="margin-top: 36px;">
-        <div style="--c: var(--pink)"><h3>Bookings nobody could honour</h3><p>Guests booked party packs the kitchen couldn't make, so staff had to call them back and sort it out.</p></div>
-        <div style="--c: var(--cyan)"><h3>A back office stuck on a desk</h3><p>Checking bookings needed a desktop, but hosts spend the whole shift on their feet.</p></div>
-        <div style="--c: var(--yellow)"><h3>Everything in two places</h3><p>Bookings lived in WordPress and payments in Stripe, so confirming a payment meant opening a second dashboard.</p></div>
+      <p class="label">the problem.</p>
+      <h2>Guests could book food packages for hours the kitchen was closed.</h2>
+      <p>The old WooCommerce booking let anyone book any package at any time. Bookings came in that the venue couldn't honour.</p>
+      <div class="cols"><div><h3>Bookings nobody could honour</h3><p>Guests booked party packs the kitchen couldn't make, so staff had to call them back and sort it out.</p></div><div><h3>A back office stuck on a desk</h3><p>Checking bookings needed a desktop, but hosts spend the whole shift on their feet.</p></div><div><h3>Everything in two places</h3><p>Bookings lived in WordPress and payments in Stripe, so confirming a payment meant a second dashboard.</p></div></div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <div class="split">
+        <div><p class="label">the floor.</p><h2>Book from a map of the real venue.</h2><p>Guests pick bowling, pool or snooker on an isometric map of the floor, then a time, then pay on the same card.</p></div>
+        <figure class="shot pinned"><div class="pin-wrap"><img src="../img/kp-floor.webp" alt="The Walk the floor section: an isometric map of the King Pins venue above cards for bowling, pool, snooker and big groups with prices." width="1800" height="1125" loading="lazy"><span class="pin" style="left:52%;top:44%" aria-hidden="true">1</span><span class="pin" style="left:53%;top:18.5%" aria-hidden="true">2</span><span class="pin" style="left:19%;top:86%" aria-hidden="true">3</span></div><ol class="notes"><li>Guests start on a map of the real floor and pick where they'll play.</li><li>Lanes seat six. Three book online and three stay free for walk-ins.</li><li>Weekday and weekend prices come straight from the venue's rate card.</li></ol></figure>
       </div>
     </div>
   </section>
-
   <section class="slide">
     <div class="wrap">
-      <h2>The new front door.</h2>
-      <figure class="shot wide"><img src="../img/kp-hero.webp" alt="The King Pins home page: a neon King Pins Bowling sign, Book your spot and Plan a party buttons, opening hours, and a count of 6 bowling lanes, 7 pool tables and 1 snooker table." width="1800" height="1125"><figcaption>Hours, what's on and what's on the floor all sit above the fold.</figcaption></figure>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="wrap split">
-      <div>
-        <h2>Real rules decide what's bookable.</h2>
-        <p>I didn't patch the old form. Opening hours, kitchen hours and holiday closures now live in one rules file that the website and the server both read.</p>
-        <p>Party packs can't start before the kitchen opens at 5 PM, and the site says so in plain words. A time slot that just disappears looks broken. A slot with a reason doesn't.</p>
+      <div class="split flip">
+        <div><p class="label">the rules.</p><h2>Real hours decide what's bookable.</h2><p>Opening hours, kitchen hours and holiday closures live in one rules file that the website and the server both read.</p><p>Party packs can't start before the kitchen opens at 5 PM, and the site says so. A slot that just disappears looks broken. A slot with a reason doesn't.</p></div>
+        <figure class="shot"><img src="../img/kp-packs.webp" alt="Party pack cards: Kids Birthday Party from $400, Corporate Pack from $750, Adults Pack and Friends Pack." width="1800" height="1125" loading="lazy"><figcaption>Party packs only offer times the kitchen can serve.</figcaption></figure>
       </div>
-      <figure class="shot"><img src="../img/kp-packs.webp" alt="Party pack cards on the King Pins site: Kids Birthday Party from $400, Corporate Pack from $750, Adults Pack and Friends Pack." width="1800" height="1125" loading="lazy"><figcaption>Party packs only offer the times the kitchen can serve.</figcaption></figure>
     </div>
   </section>
-
-  <section class="slide">
-    <div class="wrap split flip">
-      <div>
-        <h2>Walk the floor. Book as you go.</h2>
-        <p>Booking opens on an isometric map of the venue. Guests pick bowling, pool or snooker, then a time, then pay on the same card.</p>
-        <p>Only three of the six lanes can be booked online. A busy night on the website never means turning away someone standing at the door.</p>
-      </div>
-      <figure class="shot"><img src="../img/kp-floor.webp" alt="The Walk the floor section: an isometric 3D map of the King Pins venue above cards for bowling, pool, snooker and big groups with their hourly prices." width="1800" height="1125" loading="lazy"><figcaption>The map and activity cards are step one of booking.</figcaption></figure>
-    </div>
-  </section>
-
   <section class="slide">
     <div class="wrap">
+      <p class="label">decisions.</p>
       <h2>Calls I'd make again.</h2>
-      <div class="cols">
-        <div style="--c: var(--pink)"><h3>No customer logins</h3><p>Asking for an account to book a lane loses the booking. Guests book with an email and phone number, in under a minute, and the system matches returning guests on those.</p></div>
-        <div style="--c: var(--cyan)"><h3>No framework, no build step</h3><p>Plain HTML, CSS and JavaScript on purpose. A small business needs something anyone can open and change years from now.</p></div>
-        <div style="--c: var(--yellow)"><h3>Honest membership maths</h3><p>The membership section shows one real visit: a two-hour weekend lane drops from $130 to $91. No vague "save big" lines.</p></div>
-      </div>
+      <div class="cols"><div><h3>No customer logins</h3><p>Asking for an account to book a lane loses the booking. Guests book with email and phone in under a minute, and returning guests are matched on those.</p></div><div><h3>No framework, no build step</h3><p>Plain HTML, CSS and JavaScript on purpose. A small business needs something anyone can open and change years from now.</p></div><div><h3>Honest membership maths</h3><p>The membership section shows one real visit: a two-hour weekend lane drops from $130 to $91.</p></div></div>
     </div>
   </section>
-
-  <section class="slide">
-    <div class="wrap split phone">
-      <div>
-        <h2>The staff side lives on their phones.</h2>
-        <p>The OPS dashboard is a web app staff add to their home screen. No app store, and every fix reaches them the moment it ships.</p>
-        <ul>
-          <li>Timeline, list and calendar views, each for a different question</li>
-          <li>Payments next to each booking, plus Stripe payment links</li>
-          <li>Customer records, regulars and Groupon codes to check</li>
-          <li>Alerts only for bookings that need prep, so nobody learns to ignore them</li>
-          <li>Hosts, managers and the owner each see what their role needs</li>
-        </ul>
-        <p class="note">Shown with the demo bookings built into the app, not real guests.</p>
-      </div>
-      <figure class="shot phone"><img src="../img/kp-ops-phone.webp" alt="The King Pins OPS app on a phone: Groupon codes to check, payment links still to pay, and today's bookings listed with times, lanes and totals." width="720" height="1558" loading="lazy"></figure>
-    </div>
-  </section>
-
   <section class="slide">
     <div class="wrap">
-      <h2>Bringing the history across.</h2>
-      <p class="lede">Retiring WordPress couldn't mean losing the venue's customers.</p>
-      <div class="numbers">
-        <div style="--c: var(--cyan)"><b>20,724</b><span>WooCommerce orders moved into the new system, going back to 2021</span></div>
-        <div style="--c: var(--pink)"><b>18,877</b><span>of them sat in "processing", because the old shop never marked paid bookings complete</span></div>
+      <div class="split phone">
+        <div><p class="label">staff app.</p><h2>The back office moved onto staff phones.</h2><p>A web app staff add to their home screen. No app store, and every fix reaches them the moment it ships.</p><p>Timeline, list and calendar views. Alerts only for bookings that need prep, so nobody learns to ignore them. Hosts, managers and the owner each see what their role needs.</p><p class="note">Shown with the demo bookings built into the app, not real guests.</p></div>
+        <figure class="shot pinned phone"><div class="pin-wrap"><img src="../img/kp-ops-phone.webp" alt="The King Pins staff app on a phone: Groupon codes to check, payment links still to pay, and today's bookings with lanes and totals." width="720" height="1558" loading="lazy"><span class="pin" style="left:19%;top:17%" aria-hidden="true">1</span><span class="pin" style="left:50%;top:27.5%" aria-hidden="true">2</span><span class="pin" style="left:14%;top:62%" aria-hidden="true">3</span></div><ol class="notes"><li>Money to chase sits on top: Groupon codes to check and payment links still unpaid.</li><li>The next shift at a glance: time, bookings and guests.</li><li>Each booking shows lane, length and total, so nobody opens Stripe to check.</li></ol></figure>
       </div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <p class="label">migration.</p>
+      <h2>Bringing the history across.</h2>
+      <div class="nums"><div><b>20,724</b><span>WooCommerce orders moved into the new system, going back to 2021</span></div><div><b>18,877</b><span>of them sat in "processing", because the old shop never marked paid bookings complete</span></div></div>
       <p>I treated those as confirmed instead of throwing them away, and checked the import against the old shop so nothing went missing.</p>
     </div>
   </section>
-
   <section class="slide">
     <div class="wrap">
-      <h2>How I built it with AI.</h2>
-      <ol class="steps">
-        <li style="--c: var(--pink)"><b><i>01</i>Design the flow</b><p>What the guest sees at each step, and the venue's real rules behind it.</p></li>
-        <li style="--c: var(--cyan)"><b><i>02</i>Write the spec</b><p>Screens, rules and edge cases, written so Claude Code can build from them.</p></li>
-        <li style="--c: var(--yellow)"><b><i>03</i>Review the build</b><p>I read what comes back and send it back when it's wrong.</p></li>
-        <li style="--c: var(--cream)"><b><i>04</i>Test like a guest</b><p>Browser automation walks the booking end to end. 38 test files guard pricing, payments and bookings.</p></li>
-      </ol>
-      <div class="callout">
-        <p><strong>Where AI got it wrong.</strong> The first membership copy made it sound like bowling would end up free. I cut it and rebuilt the section around one real visit and a break-even point.</p>
-      </div>
+      <p class="label">how I built it.</p>
+      <h2>AI wrote most of the code. I made the calls.</h2>
+      <ol class="steps"><li><b><i>01</i>Design the flow</b><p>What the guest sees at each step, and the venue's real rules behind it.</p></li><li><b><i>02</i>Write the spec</b><p>Screens, rules and edge cases, written so Claude Code can build from them.</p></li><li><b><i>03</i>Review the build</b><p>I read what comes back and send it back when it's wrong.</p></li><li><b><i>04</i>Test like a guest</b><p>Browser automation walks the booking end to end. 38 test files guard pricing, payments and bookings.</p></li></ol>
+      <div class="callout"><p><strong>Where AI got it wrong.</strong> The first membership copy made it sound like bowling would end up free. I cut it and rebuilt the section around one real visit and a break-even point.</p></div>
     </div>
   </section>
-
-  <section class="slide">
-    <div class="wrap split">
-      <div>
-        <h2>Membership, sold on one real visit.</h2>
-        <p>Members get 30% off bowling and pool. Instead of a percentage on its own, the page shows what that does to an actual weekend night out.</p>
-        <p class="note">This screenshot is from the Black Friday offer running now.</p>
-      </div>
-      <figure class="shot"><img src="../img/kp-members.webp" alt="The King Pins membership section during Black Friday: One for you, one to give, half price, you save $65, next to two membership cards." width="1800" height="1125" loading="lazy"></figure>
-    </div>
-  </section>
-
   <section class="slide">
     <div class="wrap">
-      <h2>I run the brand too.</h2>
-      <p>The site's look carries into everything the venue puts out. I design the posters, sandwich boards and Instagram content.</p>
-      <div class="gallery" style="--n: 4; margin-top: 28px;">
-        <img src="../img/poster-beerpong.webp" alt="Illustrated Beer Pong Tournament poster." width="900" height="1200" loading="lazy">
-        <img src="../img/poster-tournaments.webp" alt="Type-only tournament sign-ups poster in pink, cyan, cream and yellow." width="900" height="1200" loading="lazy">
-        <img src="../img/poster-pick-one.webp" alt="Photo poster: beer pong cups and an eight ball, Pick one. Or both." width="900" height="1200" loading="lazy">
-        <img src="../img/sandwich-board.webp" alt="Late Night 30% Off sandwich board." width="900" height="1350" loading="lazy">
+      <div class="split">
+        <div><p class="label">membership.</p><h2>Sold on one real visit.</h2><p>Members get 30% off bowling and pool. Instead of a percentage on its own, the page shows what that does to an actual weekend night out.</p><p class="note">This screenshot shows the Black Friday offer running now.</p></div>
+        <figure class="shot"><img src="../img/kp-members.webp" alt="The membership section during Black Friday: one for you, one to give, half price, next to two membership cards." width="1800" height="1125" loading="lazy"></figure>
       </div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <p class="label">brand.</p>
+      <h2>I run the venue's brand too.</h2>
+      <p>Posters, sandwich boards and Instagram content, all in the same look as the site.</p>
+      <div class="gallery" style="--n: 4;"><img src="../img/poster-beerpong.webp" alt="Illustrated Beer Pong Tournament poster." width="900" height="1200" loading="lazy"><img src="../img/poster-tournaments.webp" alt="Type-only tournament sign-ups poster." width="900" height="1200" loading="lazy"><img src="../img/poster-pick-one.webp" alt="Photo poster: beer pong cups and an eight ball, Pick one. Or both." width="900" height="1200" loading="lazy"><img src="../img/sandwich-board.webp" alt="Late Night 30% Off sandwich board." width="900" height="1350" loading="lazy"></div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <div class="split">
+        <div><p class="label">what's next.</p><h2>Lane-linked food orders, then tournaments.</h2><p>QR ordering tied to the lane booking, so food orders reach the kitchen already tagged to the right lane. The venue's Clover till can't do that.</p><p>After that, events: tournaments, a live leaderboard and a what's-on listing. Sign-ups for the first tournaments are already open.</p></div>
+        <figure class="shot"><img src="../img/kp-events.webp" alt="The events section: Next one's Dec 10, with cards for a Beer Pong tournament, pool tournaments and more nights on the way." width="1800" height="1125" loading="lazy"></figure>
+      </div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <div class="next"><div><p class="label muted">next project.</p><a class="nextlink" href="konze.html">konze.</a></div><a class="out" href="https://www.kingpinsbowl.ca/">visit kingpinsbowl.ca.</a></div>
     </div>
   </section>
 
-  <section class="slide">
-    <div class="wrap split">
-      <div>
-        <h2>What's next.</h2>
-        <p>QR ordering tied to the lane booking, so food orders reach the kitchen already tagged to the right lane. The venue's Clover till can't do that.</p>
-        <p>After that, events: tournaments, a live leaderboard and a what's-on listing. Sign-ups for the first tournaments are already open on the site.</p>
-      </div>
-      <figure class="shot"><img src="../img/kp-events.webp" alt="The King Pins events section: Next one's Dec 10, with cards for a Beer Pong tournament, pool tournaments and more nights on the way." width="1800" height="1125" loading="lazy"></figure>
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="wrap next">
-      <div>
-        <span class="label">Next project</span>
-        <a class="nextlink" href="konze.html" style="--c: var(--cyan)">Konze.<br>Five apps.</a>
-      </div>
-      <a class="btn btn-line" href="https://www.kingpinsbowl.ca/">Visit kingpinsbowl.ca</a>
-    </div>
-  </section>
 </main>
-
 <footer class="foot">
-  <span>&copy; 2026 Mudit Dhangar, Vancouver.</span>
-  <span>Press P to present. Arrow keys move, Esc exits.</span>
+  <span>mudit dhangar, vancouver.</span>
+  <span>press p to present. arrow keys move, esc exits.</span>
 </footer>
-<script src="../js/deck.js?v=4"></script>
+<script src="../js/deck.js?v=5"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/site.css?v=9">
+<link rel="stylesheet" href="../css/site.css?v=11">
 </head>
 <body>
 <a class="skip" href="#start">Skip to content</a>
@@ -32,7 +32,7 @@
     <div class="wrap">
       <h1 class="cs-title">king pins.</h1>
       <p class="lede">I designed and built a new website, booking system and staff app for a bowling, pool and snooker venue in North Vancouver. On my own, with Claude Code.</p>
-      <dl class="meta"><div><dt>role</dt><dd>Product design and build, solo</dd></div><div><dt>timeline</dt><dd>May 2026 to now</dd></div><div><dt>live</dt><dd>4 September 2026, <a href="https://www.kingpinsbowl.ca/">kingpinsbowl.ca</a></dd></div><div><dt>built with</dt><dd>Claude Code, vanilla JS, Firebase, Stripe</dd></div></dl>
+      <dl class="meta"><div><dt>role</dt><dd>Product design and build, solo</dd></div><div><dt>timeline</dt><dd>May 2026 to now</dd></div><div><dt>live</dt><dd>4 September 2026, <a href="https://www.kingpinsbowl.ca/">kingpinsbowl.ca</a></dd></div><div><dt>built with</dt><dd>Claude Code, vanilla JS, Firebase, Stripe, GSAP</dd></div><div><dt>shows</dt><dd>research. brand to product. 3d and motion. shipped with ai.</dd></div></dl>
     </div>
   </section>
   <section class="slide">
@@ -53,6 +53,14 @@
   </section>
   <section class="slide">
     <div class="wrap">
+      <p class="label">research.</p>
+      <h2>Audit first, then the reviews.</h2>
+      <p>Before designing anything I audited the old site and walked its booking flow end to end. Time slots ignored the venue's real hours, the cancellation policy was hidden at checkout, images were broken and placeholder data was still live.</p>
+      <p>Guest reviews pointed at the same gap: the website promised one thing and the venue did another. So every promise on the new site had to match how the floor actually runs.</p>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
       <div class="split">
         <div><p class="label">the floor.</p><h2>Book from a map of the real venue.</h2><p>Guests pick bowling, pool or snooker on an isometric map of the floor, then a time, then pay on the same card.</p></div>
         <figure class="shot pinned"><div class="pin-wrap"><img src="../img/kp-floor.webp" alt="The Walk the floor section: an isometric map of the King Pins venue above cards for bowling, pool, snooker and big groups with prices." width="1800" height="1125" loading="lazy"><span class="pin" style="left:52%;top:44%" aria-hidden="true">1</span><span class="pin" style="left:53%;top:18.5%" aria-hidden="true">2</span><span class="pin" style="left:19%;top:86%" aria-hidden="true">3</span></div><ol class="notes"><li>Guests start on a map of the real floor and pick where they'll play.</li><li>Lanes seat six. Three book online and three stay free for walk-ins.</li><li>Weekday and weekend prices come straight from the venue's rate card.</li></ol></figure>
@@ -64,6 +72,23 @@
       <div class="split flip">
         <div><p class="label">the rules.</p><h2>Real hours decide what's bookable.</h2><p>Opening hours, kitchen hours and holiday closures live in one rules file that the website and the server both read.</p><p>Party packs can't start before the kitchen opens at 5 PM, and the site says so. A slot that just disappears looks broken. A slot with a reason doesn't.</p></div>
         <figure class="shot"><img src="../img/kp-packs.webp" alt="Party pack cards: Kids Birthday Party from $400, Corporate Pack from $750, Adults Pack and Friends Pack." width="1800" height="1125" loading="lazy"><figcaption>Party packs only offer times the kitchen can serve.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+  <section class="slide" id="motion">
+    <div class="wrap">
+      <p class="label">3d and motion.</p>
+      <h2>A floor plan that zooms to where you'll play.</h2>
+      <p>The isometric map is an SVG. Pick an activity and GSAP eases the view into that zone, dims the rest of the floor and floats a real photo of it.</p>
+      <div class="gallery" style="--n: 2;"><img src="../img/kp-map.webp" alt="The whole isometric King Pins floor plan above the bowling, pool, snooker and big group cards." width="1600" height="998" loading="lazy"><img src="../img/kp-map-zoom.webp" alt="The same map zoomed into the snooker and pool area, with the rest of the floor dimmed." width="1600" height="998" loading="lazy"></div>
+      <p class="note" style="margin-top: 14px;">Left: the full floor. Right: after choosing snooker.</p>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <div class="split">
+        <div><p class="label">3d.</p><h2>Poster scenes lit in Blender.</h2><p>For a late-night pool poster I staged a pool table in Blender and lit it in the venue's pink and blue, then set the type over the render.</p></div>
+        <figure class="shot"><div style="max-width: 420px; margin: 0 auto;"><img src="../img/kp-pool-render.webp" alt="Blender render: a pool table under a blue and pink spotlight with the line Own the table after dark, after 9 PM Monday to Thursday." width="900" height="1246" loading="lazy"></div></figure>
       </div>
     </div>
   </section>
@@ -133,6 +158,6 @@
   <span>mudit dhangar, vancouver.</span>
   <span>press p to present. arrow keys move, esc exits.</span>
 </footer>
-<script src="../js/deck.js?v=9"></script>
+<script src="../js/deck.js?v=11"></script>
 </body>
 </html>

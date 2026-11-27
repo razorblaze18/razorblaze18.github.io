@@ -248,3 +248,16 @@ html.presenting .work-list .tags { display: none; }
 html.presenting .pillars p { font-size: clamp(13px, 1.05vw, 16px) !important; }
 html.presenting .pillars b { font-size: clamp(16px, 1.3vw, 20px); }
 html.presenting .shot.small img { max-height: 34vh; }
+
+/* research numbers in fours, and insight to decision rows */
+.nums.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 900px) { .nums.four { grid-template-columns: 1fr 1fr; } }
+.insights { list-style: none; counter-reset: ins; margin: 18px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.insights li { counter-increment: ins; display: grid; grid-template-columns: 2.4em minmax(0, 1fr) minmax(0, 1.2fr); gap: 12px clamp(16px, 3vw, 40px); padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.6; }
+.insights li::before { content: counter(ins, decimal-leading-zero); color: var(--muted); font-size: 12px; padding-top: 2px; }
+.insights li span:first-of-type { color: var(--fg); }
+.insights li span:last-of-type { color: var(--muted); }
+.insights li span:last-of-type::before { content: "so: "; color: var(--soft); }
+@media (max-width: 760px) { .insights li { grid-template-columns: 2em 1fr; } .insights li span:last-of-type { grid-column: 2; } }
+html.presenting .insights li { padding: 1.1vh 0; font-size: clamp(13px, 1.05vw, 16px); }
+html.presenting .nums.four b { font-size: clamp(36px, 4.6vw, 68px); }

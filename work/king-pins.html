@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/site.css?v=11">
+<link rel="stylesheet" href="../css/site.css?v=12">
 </head>
 <body>
 <a class="skip" href="#start">Skip to content</a>
@@ -54,9 +54,23 @@
   <section class="slide">
     <div class="wrap">
       <p class="label">research.</p>
-      <h2>Audit first, then the reviews.</h2>
-      <p>Before designing anything I audited the old site and walked its booking flow end to end. Time slots ignored the venue's real hours, the cancellation policy was hidden at checkout, images were broken and placeholder data was still live.</p>
-      <p>Guest reviews pointed at the same gap: the website promised one thing and the venue did another. So every promise on the new site had to match how the floor actually runs.</p>
+      <h2>Four ways in, before any screen.</h2>
+      <div class="cols"><div><h3>The old site</h3><p>I walked its booking flow end to end. Time slots ignored the real hours, the cancellation policy was hidden at checkout, images were broken and placeholder data was still live. Guest reviews pointed at the same gap between promise and venue.</p></div><div><h3>Five years of orders</h3><p>I read the old shop's order history: 20,724 WooCommerce orders since 2021, which I later migrated into the new system.</p></div><div><h3>The owner's rules</h3><p>I wrote the venue's rules down in the owner's own words, like: "The kitchen opens at 5PM so we don't want to have packages before that on Monday to Thursday."</p></div><div><h3>Platforms and partners</h3><p>UrVenue came closest to the floor-plan idea. Toast had no lane booking. Groupon offers no API, so voucher redemption stays a staff step.</p></div></div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <p class="label">what the orders said.</p>
+      <h2>The order history put numbers on the problem.</h2>
+      <div class="nums four"><div><b>38%</b><span>of Monday to Thursday party packages were booked to start before the kitchen opened at 5 PM</span></div><div><b>69%</b><span>of orders were for Friday to Sunday</span></div><div><b>37%</b><span>were placed less than 24 hours before the game</span></div><div><b>23%</b><span>of guests booked more than once</span></div></div>
+      <p class="note">From 20,288 orders that weren't cancelled, 2021 to 2026. The 38% is 104 of 271 packages, measured against today's kitchen hours.</p>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <p class="label">insights.</p>
+      <h2>What I learned, and what I built because of it.</h2>
+      <ol class="insights"><li><span>Party packs were being sold into a closed kitchen.</span><span>Packages only offer start times after the kitchen opens, and the site says why in one sentence a host can repeat on the phone.</span></li><li><span>More than a third of bookings come in within a day of playing.</span><span>No accounts. Email and phone, and a booking takes under a minute.</span></li><li><span>Weekends carry the venue.</span><span>Weekday and weekend prices come from the rate card, and three of six lanes stay free for walk-ins on busy nights.</span></li><li><span>Nearly a quarter of guests come back.</span><span>Guests are matched by email and phone, so staff see their regulars without anyone making a login.</span></li><li><span>Bookings lived in WordPress, payments in Stripe, and hosts are on their feet all shift.</span><span>A staff app on their phones, with payment status beside every booking.</span></li><li><span>Groupon has no API.</span><span>Codes are checked against an imported voucher list, and the staff app flags the ones still to check.</span></li></ol>
     </div>
   </section>
   <section class="slide">
@@ -95,8 +109,8 @@
   <section class="slide">
     <div class="wrap">
       <p class="label">decisions.</p>
-      <h2>Calls I'd make again.</h2>
-      <div class="cols"><div><h3>No customer logins</h3><p>Asking for an account to book a lane loses the booking. Guests book with email and phone in under a minute, and returning guests are matched on those.</p></div><div><h3>No framework, no build step</h3><p>Plain HTML, CSS and JavaScript on purpose. A small business needs something anyone can open and change years from now.</p></div><div><h3>Honest membership maths</h3><p>The membership section shows one real visit: a two-hour weekend lane drops from $130 to $91.</p></div></div>
+      <h2>Two more calls I'd make again.</h2>
+      <div class="cols"><div><h3>No framework, no build step</h3><p>Plain HTML, CSS and JavaScript on purpose. A small business needs something anyone can open and change years from now.</p></div><div><h3>Honest membership maths</h3><p>The membership section shows one real visit: a two-hour weekend lane drops from $130 to $91. No vague "save big" lines.</p></div></div>
     </div>
   </section>
   <section class="slide">
@@ -121,6 +135,14 @@
       <h2>AI wrote most of the code. I made the calls.</h2>
       <ol class="steps"><li><b><i>01</i>Design the flow</b><p>What the guest sees at each step, and the venue's real rules behind it.</p></li><li><b><i>02</i>Write the spec</b><p>Screens, rules and edge cases, written so Claude Code can build from them.</p></li><li><b><i>03</i>Review the build</b><p>I read what comes back and send it back when it's wrong.</p></li><li><b><i>04</i>Test like a guest</b><p>Browser automation walks the booking end to end. 38 test files guard pricing, payments and bookings.</p></li></ol>
       <div class="callout"><p><strong>Where AI got it wrong.</strong> The first membership copy made it sound like bowling would end up free. I cut it and rebuilt the section around one real visit and a break-even point.</p></div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="wrap">
+      <p class="label">quality.</p>
+      <h2>Before launch, I audited my own build.</h2>
+      <p>AI makes building fast, and it leaves mess behind. On 27 July, about five weeks before launch, I audited 4,042 lines of HTML, 36,188 of CSS and 10,283 of JavaScript the way I'd audit someone else's.</p>
+      <div class="nums"><div><b>122</b><span>backup and scratch files that had gone out with a deploy</span></div><div><b>5</b><span>facts the site contradicted itself on, like party pack prices that differed between the card and the form it opened</span></div><div><b>39%</b><span>of CSS classes not used anywhere</span></div></div>
     </div>
   </section>
   <section class="slide">
@@ -158,6 +180,6 @@
   <span>mudit dhangar, vancouver.</span>
   <span>press p to present. arrow keys move, esc exits.</span>
 </footer>
-<script src="../js/deck.js?v=11"></script>
+<script src="../js/deck.js?v=12"></script>
 </body>
 </html>

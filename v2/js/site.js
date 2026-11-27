@@ -1,7 +1,7 @@
-/* Motion rebuilt from the Framer project, using the same spring stiffness, damping and mass:
-   splash, hero entrance, scroll reveals, custom cursor, project image cursor, process track,
-   photo zoom, footer curtain, case-study nav and cover parallax, plus Lenis smooth scroll.
-   Also the Vancouver clock and present mode (P or the Present button, arrows move, Esc exits, ?present opens it). */
+/* Motion rebuilt from the Framer project with the same values: three-column splash, hero and tagline entrances,
+   scroll transforms (reveals that reverse below the trigger line), cursor variants, project image cursor, process track,
+   photo zoom, footer curtain, case-study nav and cover parallax, Lenis smooth scroll (Framer Smooth Scroll, intensity 11).
+   Also the local clock and present mode (P or the Present button, arrows move, Esc exits, ?present opens it). */
 (function () {
   var d = document, root = d.documentElement, W = window;
   var mq = function (q) { return !!(W.matchMedia && W.matchMedia(q).matches); };
@@ -13,9 +13,9 @@
   var t0 = now();
   var $ = function (s, c) { return [].slice.call((c || d).querySelectorAll(s)); };
   var raf2 = function (f) { requestAnimationFrame(function () { requestAnimationFrame(f); }); };
+  var bp = function () { var w = W.innerWidth; return w >= 1600 ? 'XL' : w >= 1200 ? 'L' : w >= 810 ? 'M' : 'S'; };
 
-  // ---------------------------------------------------------------- springs
-  // Solve m*x'' + c*x' + k*(x-1) = 0 from rest and hand CSS the exact curve as linear().
+  // ---------------------------------------------------------------- springs -> CSS linear()
   function springCurve(k, c, m) {
     var x = 0, v = 0, dt = 1 / 1000, trace = [], end = 1;
     for (var i = 0; i < 4000; i++) {
@@ -27,7 +27,7 @@
     pts.push('1');
     return { e: 'linear(' + pts.join(', ') + ')', t: (end / 1000).toFixed(3) + 's' };
   }
-  var SPRINGS = { reveal: [300, 60, 0.1], hero: [350, 50, 4], splash: [300, 60, 1], photo: [400, 60, 1], variant: [500, 60, 1], appear: [350, 60, 6] };
+  var SPRINGS = { reveal: [300, 60, 0.1], hero: [350, 50, 4], photo: [400, 60, 1], variant: [500, 60, 1], appear: [350, 60, 6], email: [400, 50, 1] };
   if (W.CSS && CSS.supports && CSS.supports('transition-timing-function', 'linear(0, 1)')) {
     Object.keys(SPRINGS).forEach(function (n) {
       var c = springCurve.apply(null, SPRINGS[n]);
@@ -35,8 +35,6 @@
       root.style.setProperty('--sp-' + n + '-t', c.t);
     });
   }
-
-  // Live springs for things that chase a moving target (cursor, process track).
   function Spring(k, c, m) { this.k = k; this.c = c; this.m = m; this.x = 0; this.v = 0; this.to = 0; }
   Spring.prototype.snap = function (x) { this.x = this.to = x; this.v = 0; };
   Spring.prototype.step = function (dt) {
@@ -51,42 +49,36 @@
     tasks = tasks.filter(function (f) { return f(dt); });
     rafId = tasks.length ? requestAnimationFrame(tick) : 0;
   }
-  function run(f) {
-    if (tasks.indexOf(f) < 0) tasks.push(f);
-    if (!rafId) { last = now(); rafId = requestAnimationFrame(tick); }
-  }
+  function run(f) { if (tasks.indexOf(f) < 0) tasks.push(f); if (!rafId) { last = now(); rafId = requestAnimationFrame(tick); } }
 
-  // ---------------------------------------------------------------- smooth scroll (Framer Smooth Scroll, intensity 11)
+  // ---------------------------------------------------------------- smooth scroll
   var lenis = null;
   function lenisOn() { if (!reduce && !lenis && W.Lenis) lenis = new W.Lenis({ duration: 1.1, autoRaf: true, anchors: true }); }
   function lenisOff() { if (lenis) { lenis.destroy(); lenis = null; } }
   if (!presentURL) lenisOn();
 
-  // ---------------------------------------------------------------- splash
+  // ---------------------------------------------------------------- splash: after 1s the columns fold up (CSS: 1s each, 0.2s apart)
   var splash = d.getElementById('splash');
   var withSplash = !!splash && motion && !presentURL;
-  var lead = withSplash ? 0 : -1.6;              // the timed entrances wait for the splash, so pull them in without it
+  var lead = withSplash ? 0 : -1.6;
   if (splash && !withSplash) splash.parentNode.removeChild(splash);
   if (withSplash) {
-    setTimeout(function () { splash.classList.add('lift'); }, Math.max(0, 1000 - (now() - t0)));
-    setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 2700);
+    setTimeout(function () { splash.classList.add('go'); }, Math.max(0, 1000 - (now() - t0)));
+    setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 2600);
   }
 
-  // ---------------------------------------------------------------- clock
-  var clk = d.querySelector('[data-clock]');
-  if (clk && W.Intl) {
-    var fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Vancouver', hour: 'numeric', minute: '2-digit' });
-    var tock = function () { clk.textContent = fmt.format(new Date()); };
-    tock(); setInterval(tock, 15000);
-  }
+  // hero name sizes come from CSS (Framer's runtime auto-fit, measured as a share of the title width)
 
-  // ---------------------------------------------------------------- buttons: second label for the roll-up hover
-  $('.pill').forEach(function (b) {
-    if (b.querySelector('.pl')) return;
-    var t = b.textContent.trim(), pl = d.createElement('span'), a = d.createElement('span'), c = d.createElement('span');
-    pl.className = 'pl'; a.textContent = t; c.textContent = t; c.setAttribute('aria-hidden', 'true');
-    pl.appendChild(a); pl.appendChild(c); b.textContent = ''; b.appendChild(pl);
-  });
+  // ---------------------------------------------------------------- navbar: visitor's time zone and local time, like the Framer Time component
+  var tz = d.querySelector('[data-tz]'), clk = d.querySelector('[data-clock]');
+  if (W.Intl) {
+    try { if (tz) tz.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || tz.textContent; } catch (e) {}
+    if (clk) {
+      var fmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      var tock = function () { clk.textContent = fmt.format(new Date()); };
+      tock(); setInterval(tock, 10000);
+    }
+  }
 
   // ---------------------------------------------------------------- appear effects
   var pending = [];
@@ -95,35 +87,36 @@
   function showIn(scope) { if (scope.hasAttribute('data-m')) show(scope); $('[data-m], .ph', scope).forEach(show); }
 
   if (motion) {
-    root.classList.add('m-prep');                // hidden states land instantly, not as a fade-out
-    // timed entrances on load (seconds from page load, as in Framer)
+    root.classList.add('m-prep');
     var timed = function (el, kind, sec) {
       el.setAttribute('data-m', kind);
       el.style.transitionDelay = Math.max(0, sec + lead - (now() - t0) / 1000).toFixed(3) + 's';
       pending.push(el);
     };
-    $('.name .n1 > span').forEach(function (el) { timed(el, 'h70', 1.8); });
-    $('.name .n2 > span').forEach(function (el) { timed(el, 'h70', 1.9); });
-    $('.cs-title h1').forEach(function (el) { timed(el, 'h70', 2.0); });
-    $('.cs-title .lede').forEach(function (el) { timed(el, 'r3', 2.05); });   // sits low on the title slide, so it comes in on load
-    $('.cs-title .meta > div').forEach(function (el, i) { timed(el, 'r3', 2.1 + i * 0.05); });
+    $('.hero-t .n1').forEach(function (el) { timed(el, 'h70', 1.8); });
+    $('.hero-t .n2').forEach(function (el) { timed(el, 'h70', 1.9); });
+    $('.phead h1').forEach(function (el) { timed(el, 'h70', 2.0); });
+    $('[data-cover]').forEach(function (el) { timed(el, 'h200', 1.8); });
 
-    // Framer scroll transforms ("Layer in View"): "mid" plays when the element crosses the middle of the screen,
-    // "start" as soon as it enters, and both play back in reverse when it drops below that line again
+    var small = bp() === 'S';
     var MID = [
-      ['#about .label, #about .big p, #about .pill', 'r3'],
-      ['.paper .label, .paper .big, .xp > div, .paper .pill, .bring .n, .bring h3, .bring p', 'r3'],
-      ['.rows > li', 'r6'],
+      ['.about-lab h2, .about-r > p, .about-r > .btn', 'r3'],
+      ['.plist .prow-in', 'r6'],
+      ['.mlist .mrow, .mlist .mimg', 'r6'],
+      ['.exp .top p, .exp .bottom > .btn, .svc-t, .svc-p, .clock .rcol p', 'r3'],
+      ['.xpc p, .xpd', small ? 'r20' : 'r3'],
+      ['[data-row]', 'r3'],
       ['.slide .s-label', 't20'],
       ['.slide .s-h, .next .big-link', 't40'],
       ['.slide .s-p, .slide .note, .card, .nums > div, .steps li, .quotes blockquote, .ins li, .callout, .next .row2', 'r3']
     ];
-    var START = [['.foot', 'foot'], ['.cover', 'h200']];
+    if (small) MID.push(['.lsec .lab h2', 'r3'], ['.pi-n, .pi-h, .pi-p', 'r20']);
+    var START = [['.foot', 'foot']];
     var mids = [], starts = $('.ph');
     MID.forEach(function (r) { $(r[0]).forEach(function (el) { if (!el.hasAttribute('data-m')) { el.setAttribute('data-m', r[1]); mids.push(el); } }); });
     START.forEach(function (r) { $(r[0]).forEach(function (el) { el.setAttribute('data-m', r[1]); starts.push(el); }); });
 
-    void root.offsetWidth;                       // commit the hidden states before anything turns on
+    void root.offsetWidth;
     root.classList.remove('m-prep');
     raf2(function () { pending.forEach(show); });
 
@@ -132,15 +125,14 @@
         var io = new IntersectionObserver(function (es) {
           es.forEach(function (e) {
             var line = e.rootBounds ? e.rootBounds.bottom : W.innerHeight;
-            if (e.isIntersecting || e.boundingClientRect.top < line) show(e.target);           // in, or already scrolled past
-            else if (!root.classList.contains('presenting')) hide(e.target);                   // back below the line
+            if (e.isIntersecting || e.boundingClientRect.top < line) show(e.target);
+            else if (!root.classList.contains('presenting')) hide(e.target);
           });
         }, { rootMargin: margin, threshold: 0 });
         els.forEach(function (el) { io.observe(el); });
       };
-      watch(mids, '0px 0px -50% 0px');
-      watch(starts, '0px');
-      // the last few items can never reach the middle of the screen, so the bottom of the page shows them
+      watch(mids, '0px 0px -50% 0px');   // viewport "middle"
+      watch(starts, '0px');               // viewport "start"
       W.addEventListener('scroll', function () {
         if (W.innerHeight + W.scrollY >= root.scrollHeight - 4) mids.forEach(function (el) { if (el.getBoundingClientRect().top < W.innerHeight) show(el); });
       }, { passive: true });
@@ -148,8 +140,8 @@
       mids.concat(starts).forEach(show);
     }
 
-    // hero tagline: one line at a time, 0.05s apart, from 2s
-    $('.hero .tag').forEach(function (tag) {
+    // hero tagline: Framer text effect, one line at a time from 2s, 0.05s apart
+    $('.hero-tag .tag').forEach(function (tag) {
       var original = tag.innerHTML, done = false;
       var split = function () {
         if (done) return; done = true;
@@ -170,36 +162,32 @@
         raf2(function () { els.forEach(show); });
         setTimeout(function () { tag.innerHTML = original; }, Math.max(0, (2 + lines.length * 0.05 + lead) * 1000 - (now() - t0)) + 1600);
       };
-      var fonts = d.fonts && d.fonts.ready;
-      if (fonts) fonts.then(split); else split();
+      if (d.fonts && d.fonts.ready) d.fonts.ready.then(split); else split();
       setTimeout(split, 1500);
     });
   }
 
-  // ---------------------------------------------------------------- custom cursor + project image cursor
+  // ---------------------------------------------------------------- cursors
   if (fine && motion) {
     root.classList.add('cur-on');
     var cur = d.createElement('div'); cur.className = 'cursor'; cur.setAttribute('aria-hidden', 'true');
     cur.innerHTML = '<span class="cd"><b>Email</b></span>';
     d.body.appendChild(cur);
-    var cx = new Spring(400, 30, 0.1), cy = new Spring(400, 30, 0.1);        // Cursor (Default) follow
-    var rows = d.querySelector('.rows'), pv = null, pimg = null, px, py;
-    if (rows) {
+    var cx = new Spring(400, 30, 0.1), cy = new Spring(400, 30, 0.1);        // Cursor (Default), follow spring
+    var list = d.querySelector('.plist'), pv = null, pimg = null, px, py;
+    if (list) {
       pv = d.createElement('div'); pv.className = 'preview'; pv.setAttribute('aria-hidden', 'true');
       pv.innerHTML = '<div class="pi"><img alt=""></div>'; pimg = pv.querySelector('img'); d.body.appendChild(pv);
-      px = new Spring(500, 40, 1); py = new Spring(500, 40, 1);               // project cursor follow
-      $('.rows .row').forEach(function (r) { var i = new Image(); i.src = r.getAttribute('data-img'); });
+      px = new Spring(500, 40, 1); py = new Spring(500, 40, 1);               // Cursor (Project), follow spring
+      $('.plist .prow').forEach(function (r) { var i = new Image(); i.src = r.getAttribute('data-img'); });
     }
-    var seen = false, mode = '';
+    var seen = false, mode = '', curLi = null;
+    var dy = { '': -2, link: 2, mail: -2, img: -2 };                         // placement bottom + Framer offsets (-10, -18, -96)
     var follow = function (dt) {
       var a = cx.step(dt), b = cy.step(dt);
-      cur.style.transform = 'translate3d(' + cx.x + 'px,' + cy.x + 'px,0)';
+      cur.style.transform = 'translate3d(' + cx.x + 'px,' + (cy.x + dy[mode]) + 'px,0)';
       var c = false;
-      if (pv) {
-        c = px.step(dt) | py.step(dt);
-        var w = pv.offsetWidth, h = pv.offsetHeight;
-        pv.style.transform = 'translate3d(' + (px.x - w / 2) + 'px,' + (py.x - h * 270 / 281) + 'px,0)';
-      }
+      if (pv) { c = px.step(dt) | py.step(dt); pv.style.transform = 'translate3d(' + (px.x - 400) + 'px,' + (py.x - 270) + 'px,0)'; }
       return a || b || c;
     };
     var setMode = function (m, row) {
@@ -209,7 +197,13 @@
           if (pimg.getAttribute('src') !== src) pimg.src = src;
           if (!pv.classList.contains('on')) { px.snap(cx.to); py.snap(cy.to); }
           pv.classList.add('on');
-        } else pv.classList.remove('on');
+          var li = row.parentNode;
+          if (curLi !== li) { if (curLi) curLi.classList.remove('on'); li.classList.add('on'); curLi = li; }
+          list.classList.add('hov');
+        } else {
+          pv.classList.remove('on'); list.classList.remove('hov');
+          if (curLi) { curLi.classList.remove('on'); curLi = null; }
+        }
       }
       if (m === mode) return;
       cur.classList.remove('link', 'mail', 'img'); if (m) cur.classList.add(m); mode = m;
@@ -221,53 +215,51 @@
       run(follow);
     }, { passive: true });
     d.addEventListener('mouseover', function (e) {
-      var t = e.target.closest ? e.target : e.target.parentElement;
+      var t = e.target && e.target.closest ? e.target : (e.target && e.target.parentElement);
       if (!t || !t.closest) return;
-      var row = t.closest('.rows .row');
-      setMode(row ? 'img' : t.closest('.talk a') ? 'mail' : t.closest('a, button, [role="button"]') ? 'link' : '', row);
+      var row = t.closest('.plist .prow');
+      setMode(row ? 'img' : t.closest('.foot-t') ? 'mail' : t.closest('a, button, [role="button"]') ? 'link' : '', row);
     });
     d.addEventListener('mouseout', function (e) { if (!e.relatedTarget) { cur.classList.remove('on'); seen = false; setMode(''); } });
   }
 
-  // ---------------------------------------------------------------- process: vertical scroll drives the track (spring 400/50/0.1)
-  var proc = d.querySelector('.process'), track = proc && proc.querySelector('.track');
+  // ---------------------------------------------------------------- process: scroll target transform, x 0 -> end, spring 400/50/0.1
+  var proc = d.querySelector('.process'), track = proc && proc.querySelector('.track'), pin = proc && proc.querySelector('.proc-pin');
   if (proc && track && !reduce) {
-    var tx = new Spring(400, 50, 0.1);
-    var extra = function () { return Math.max(0, track.scrollWidth - W.innerWidth); };
-    var trackStep = function (dt) { var on = tx.step(dt); track.style.transform = 'translate3d(' + tx.x + 'px,0,0)'; return on; };
+    var END = { XL: -2000, L: -2050, M: -1420 };
+    var tx = new Spring(400, 50, 0.1), geo = null;
+    var trackStep = function (dt) { var on = tx.step(dt); track.style.transform = 'translate3d(' + tx.x.toFixed(2) + 'px,0,0)'; return on; };
+    var measure = function () {
+      var top = proc.getBoundingClientRect().top + W.scrollY;
+      var pinTop = pin.getBoundingClientRect().top + W.scrollY;
+      var off = track.getBoundingClientRect().bottom - pin.getBoundingClientRect().top;   // track bottom inside the pinned wrapper
+      geo = { s0: top + off - W.innerHeight, s1: top + proc.offsetHeight - W.innerHeight };
+      if (pinTop < top) geo.s0 = top + off - W.innerHeight;
+    };
     var aim = function () {
-      if (W.innerWidth < 810) return;
-      var top = proc.getBoundingClientRect().top;
-      var p = Math.min(1, Math.max(0, -top / Math.max(1, proc.offsetHeight - W.innerHeight)));
-      tx.to = -p * extra(); run(trackStep);
+      var b = bp(); if (b === 'S') return;
+      if (!geo) measure();
+      var p = Math.min(1, Math.max(0, (W.scrollY - geo.s0) / Math.max(1, geo.s1 - geo.s0)));
+      tx.to = p * END[b]; run(trackStep);
     };
-    var size = function () {
-      if (W.innerWidth < 810) { proc.style.height = ''; track.style.transform = ''; tx.snap(0); return; }
-      proc.style.height = (W.innerHeight + extra() * 1.25) + 'px';   // Framer: 2000px of travel over 2500px of scroll
-      aim();
-    };
+    var size = function () { geo = null; if (bp() === 'S') { track.style.transform = ''; tx.snap(0); return; } measure(); aim(); };
     W.addEventListener('scroll', aim, { passive: true });
     W.addEventListener('resize', size);
     W.addEventListener('load', size);
     size();
   }
 
-  // ---------------------------------------------------------------- case studies: nav hides going down, cover parallax (speed 85)
-  var nav = d.querySelector('.cnav'), lastY = W.scrollY;
-  var cover = d.querySelector('.cover img');
+  // ---------------------------------------------------------------- case studies: nav hides on scroll down (y -108, fade), cover parallax speed 85
+  var nav = d.querySelector('.pnav'), lastY = W.scrollY;
+  var cover = d.querySelector('[data-cover] img');
   var onScroll = function () {
     var y = W.scrollY;
     if (nav && !root.classList.contains('presenting')) {
-      if (y > lastY + 2 && y > 120) nav.classList.add('away');
-      else if (y < lastY - 2 || y <= 120) nav.classList.remove('away');
+      if (y > lastY + 2 && y > 40) nav.classList.add('away');
+      else if (y < lastY - 2 || y <= 40) nav.classList.remove('away');
     }
     lastY = y;
-    if (cover && motion && !root.classList.contains('presenting')) {
-      var r = cover.parentNode.getBoundingClientRect();
-      var off = (r.top + r.height / 2 - W.innerHeight / 2) * -0.15;
-      var lim = r.height * 0.1;
-      cover.style.transform = 'translate3d(0,' + Math.max(-lim, Math.min(lim, off)).toFixed(1) + 'px,0)';
-    }
+    if (cover && motion && bp() !== 'S' && !root.classList.contains('presenting')) cover.style.transform = 'translate3d(0,' + (y * 0.15).toFixed(1) + 'px,0)';
   };
   if (nav || cover) { W.addEventListener('scroll', onScroll, { passive: true }); onScroll(); }
 
@@ -284,7 +276,7 @@
   var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
   var setCount = function () {
     countEl.textContent = pad(current + 1) + ' / ' + pad(slides.length);
-    if (root.classList.contains('presenting')) showIn(slides[current]);   // each slide builds in as it arrives
+    if (root.classList.contains('presenting')) showIn(slides[current]);
   };
   var go = function (i) { current = Math.max(0, Math.min(slides.length - 1, i)); slides[current].scrollIntoView({ block: 'start' }); setCount(); };
   var start = function (full) {

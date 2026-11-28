@@ -653,3 +653,13 @@ html.presenting .sides li { padding: 1.4vh 0; }
 }
 html.presenting .ds { margin-top: 4vh; gap: 4vh; }
 html.presenting .ds-c i { aspect-ratio: auto; height: 9vh; }
+
+/* phones: once the page scrolls, the case-study nav sits on a solid bar instead of on top of the text */
+@media (max-width: 809.98px) {
+  .pnav { transition: transform .5s cubic-bezier(.44, 0, .56, 1), opacity .5s cubic-bezier(.44, 0, .56, 1), background-color .3s ease, padding .3s ease; }
+  .pnav.solid { background: var(--bg); padding: 18px 0 16px; }
+  .pnav.solid .pnav-w { mix-blend-mode: normal; }
+}
+/* website screenshots on a light slide get a hairline frame so the page edge doesn't melt into the slide */
+.slide.light .shot.web img { border-radius: 12px; box-shadow: 0 0 0 1px rgba(26, 26, 26, .12), 0 24px 60px -30px rgba(26, 26, 26, .35); }
+.slide.dark .shot.web img { border-radius: 12px; }

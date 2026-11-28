@@ -373,6 +373,7 @@
     if (nav && !root.classList.contains('presenting')) {
       if (y > lastY + 2 && y > 40) nav.classList.add('away');
       else if (y < lastY - 2 || y <= 40) nav.classList.remove('away');
+      nav.classList.toggle('solid', y > 40);
     }
     lastY = y;
     if (cover && motion && bp() !== 'S' && !root.classList.contains('presenting')) cover.style.transform = 'translate3d(0,' + (y * 0.15).toFixed(1) + 'px,0)';

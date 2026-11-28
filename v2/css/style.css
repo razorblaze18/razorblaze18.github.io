@@ -54,7 +54,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  position: relative; background: var(--bg); color: var(--fg);
+  position: relative; background: var(--bg); color: var(--fg); overflow-x: hidden; overflow-x: clip;  /* nothing can push the page sideways on touch screens */
   font-family: "DM Sans", sans-serif; font-weight: 400; font-size: var(--b6); line-height: 1.4;
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
 }
@@ -249,7 +249,7 @@ html.pt-in #splash.go .sp-cols i:nth-child(3) { transition-delay: .2s; }
 @media (max-width: 809.98px) { .btn { padding: 12px 24px; } .btn.dark { padding: 12px 20px; } }
 
 /* ---------------------------------------------------------------- process */
-.process { position: relative; z-index: 2; background: var(--bg); display: flex; flex-direction: column; }
+.process { position: relative; z-index: 2; background: var(--bg); display: flex; flex-direction: column; overflow-x: clip;  /* clip, not hidden: the pinned track still sticks */ }
 .proc-pin { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 120px; }
 .proc-title { width: 90%; display: flex; justify-content: space-between; overflow: hidden; }
 .proc-title h2 { width: 55%; }
@@ -260,7 +260,17 @@ html.pt-in #splash.go .sp-cols i:nth-child(3) { transition-delay: .2s; }
 .pi-n { opacity: .24; }
 .proc-trigger { height: 2500px; }
 @media (min-width: 1200px) and (max-width: 1599.98px) { .proc-title h2 { width: 50%; } .track { gap: 250px; } }
-@media (min-width: 810px) and (max-width: 1199.98px) { .track { gap: 150px; } .pitem { width: 400px; } }
+/* tablets: no pinned sideways track; the four steps sit in a 2 by 2 grid */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .process { padding: 100px 0; }
+  .proc-pin { position: relative; height: auto; gap: 64px; }
+  .proc-title h2 { width: 70%; }
+  .proc-c { align-items: center; justify-content: center; }
+  .track { width: 90%; display: grid; grid-template-columns: 1fr 1fr; gap: 56px 48px; transform: none !important; }
+  .pitem { width: auto; gap: 12px; }
+  .pi-n { opacity: .4; }
+  .proc-trigger { display: none; }
+}
 @media (max-width: 809.98px) {
   .process { padding: 75px 0; overflow: hidden; }
   .proc-pin { position: relative; height: auto; gap: 48px; }
@@ -307,7 +317,7 @@ html.pt-in #splash.go .sp-cols i:nth-child(3) { transition-delay: .2s; }
   .exp .rcol { gap: 56px; } .exp .bottom { gap: 48px; }
   .serv .w90 { gap: 56px; } .serv .rcol { gap: 48px; } .srow { gap: 32px; } .svc { gap: 12px; }
   .clock .w90 { gap: 56px; }
-  .photos { flex-direction: column; } .ph { flex: none; width: 100%; height: 50vh; }
+  .photos { flex-direction: row; gap: 16px; } .ph { flex: 1 0 0; height: 42vh; }
 }
 @media (max-width: 809.98px) {
   .lsec { padding: 75px 0; flex-direction: column; align-items: center; }
@@ -634,25 +644,33 @@ html.presenting .slide[data-ch] .ba { max-width: calc(56vh * 1.6); }
 html.presenting .sides { margin-top: 5vh; }
 html.presenting .sides li { padding: 1.4vh 0; }
 
-/* a design system shown live: type in the real fonts, swatches with contrast, the rules it keeps */
-.ds { margin-top: 72px; display: flex; flex-direction: column; gap: 56px; }
-.ds-type { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.ds-f { display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, .16); }
-.ds-s { font-size: clamp(30px, 3.4vw, 52px); line-height: 1.1; color: var(--fg); }
-.ds-f .t-b6 { opacity: .64; } .ds-f b { font-weight: 500; opacity: 1; margin-right: 6px; }
-.ds-cols { display: grid; grid-template-columns: repeat(7, 1fr); gap: 16px; }
-.ds-c i { display: block; aspect-ratio: 1 / 1; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); margin-bottom: 12px; }
-.ds-c span { opacity: .72; display: block; } .ds-c b { font-weight: 500; }
-.ds-rules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.ds-rules li { padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, .16); }
-@media (max-width: 1199.98px) { .ds-cols { grid-template-columns: repeat(4, 1fr); } }
+/* a design system shown live: type in the real fonts, swatches with their roles, the rules it keeps */
+.ds { margin-top: 72px; display: flex; flex-direction: column; gap: 56px; --ds-line: rgba(255, 255, 255, .16); }
+.slide.light .ds { --ds-line: rgba(26, 26, 26, .14); }
+.ds-type { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 32px; }
+.ds-f { display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid var(--ds-line); min-width: 0; }
+.ds-s { font-size: clamp(30px, 3.4vw, 52px); line-height: 1.1; color: inherit; overflow-wrap: anywhere; }
+.ds-type.many .ds-s { font-size: clamp(24px, 2.2vw, 34px); }
+.ds-f .t-b6 { opacity: .64; } .ds-f b { font-weight: 500; margin-right: 6px; }
+.ds-cols { display: grid; grid-template-columns: repeat(var(--n, 7), minmax(0, 1fr)); gap: 16px; }
+.ds-c i { display: block; aspect-ratio: 1 / 1; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--ds-line); margin-bottom: 12px; }
+.ds-c span { opacity: .72; display: block; overflow-wrap: anywhere; } .ds-c b { font-weight: 500; }
+.ds-rules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.ds-rules li { padding-top: 16px; border-top: 1px solid var(--ds-line); }
+@media (max-width: 1199.98px) {
+  .ds-type, .ds-type.many { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ds-cols { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .ds-s, .ds-type.many .ds-s { font-size: clamp(24px, 3.6vw, 40px); }
+}
 @media (max-width: 809.98px) {
   .ds { margin-top: 40px; gap: 40px; }
-  .ds-type, .ds-rules { grid-template-columns: 1fr; gap: 20px; }
-  .ds-cols { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .ds-type, .ds-type.many, .ds-rules { grid-template-columns: 1fr; gap: 20px; }
+  .ds-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .ds-s, .ds-type.many .ds-s { font-size: 28px; }
 }
 html.presenting .ds { margin-top: 4vh; gap: 4vh; }
 html.presenting .ds-c i { aspect-ratio: auto; height: 9vh; }
+html.presenting .ds-type.many .ds-s { font-size: clamp(22px, 1.9vw, 30px); }
 
 /* phones: once the page scrolls, the case-study nav sits on a solid bar instead of on top of the text */
 @media (max-width: 809.98px) {

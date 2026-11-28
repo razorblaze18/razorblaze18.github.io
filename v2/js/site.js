@@ -353,12 +353,12 @@
       if (pinTop < top) geo.s0 = top + off - W.innerHeight;
     };
     var aim = function () {
-      var b = bp(); if (b === 'S') return;
+      var b = bp(); if (b === 'S' || b === 'M') return;   // phones and tablets: the steps stack, no sideways track
       if (!geo) measure();
       var p = Math.min(1, Math.max(0, (W.scrollY - geo.s0) / Math.max(1, geo.s1 - geo.s0)));
       tx.to = p * END[b]; run(trackStep);
     };
-    var size = function () { geo = null; if (bp() === 'S') { track.style.transform = ''; tx.snap(0); return; } measure(); aim(); };
+    var size = function () { geo = null; var b = bp(); if (b === 'S' || b === 'M') { track.style.transform = ''; tx.snap(0); return; } measure(); aim(); };
     W.addEventListener('scroll', aim, { passive: true });
     W.addEventListener('resize', size);
     W.addEventListener('load', size);

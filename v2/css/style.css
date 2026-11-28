@@ -496,8 +496,16 @@ html.pt-in #splash.go .sp-cols i:nth-child(3) { transition-delay: .2s; }
   .ins li { grid-template-columns: 1fr; gap: 6px; }
   .ba { margin-top: 40px; } .ba-stage { border-radius: 8px; } .ba-tag { top: 10px; padding: 4px 10px; } .ba-l { left: 10px; } .ba-r { right: 10px; } .ba-line i { width: 40px; height: 40px; margin: -20px 0 0 -20px; } .ba-line i::before { left: 10px; } .ba-line i::after { right: 10px; }
   .ins li.hd { display: none; }
-  .split, .split.phone, .split.phone.flip { grid-template-columns: 1fr; gap: 40px; }
+  .split, .split.flip, .split.phone, .split.phone.flip { grid-template-columns: 1fr; gap: 40px; }
+  .xprow { align-items: flex-start; }
   .split.flip > :first-child { order: 0; }
+}
+
+/* website-screenshot covers: shown whole below desktop, where a 70vh crop cuts the page in half */
+@media (max-width: 1199.98px) {
+  .pcover.is-screen, .pcover.is-screen.slide { height: auto; }
+  .pcover.is-screen .pci { width: 100%; height: auto; }
+  .pcover.is-screen img { height: auto; object-fit: contain; }
 }
 
 /* ---------------------------------------------------------------- present mode */

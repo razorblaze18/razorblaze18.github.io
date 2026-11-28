@@ -443,5 +443,47 @@
     }
   });
   setCount();
+
+  // ---------------------------------------------------------------- story chapters: a rail that fills as you move through each chapter
+  var chs = $('[data-ch]');
+  if (chs.length) {
+    var order = [], byN = {};
+    chs.forEach(function (s) {
+      var n = +s.getAttribute('data-ch');
+      if (!byN[n]) { byN[n] = { n: n, name: s.getAttribute('data-chn'), els: [] }; order.push(byN[n]); }
+      byN[n].els.push(s);
+    });
+    var rail = d.createElement('nav');
+    rail.className = 'chrail'; rail.setAttribute('aria-label', 'Chapters');
+    rail.innerHTML = '<div class="chrail-s">' + order.map(function (c) {
+      return '<button type="button" aria-label="Chapter ' + c.n + ': ' + c.name + '"><i></i></button>';
+    }).join('') + '</div><span class="chrail-t" aria-hidden="true"><b></b><span></span></span>';
+    d.body.appendChild(rail);
+    var bars = rail.querySelectorAll('.chrail-s i'), tB = rail.querySelector('.chrail-t b'), tS = rail.querySelector('.chrail-t span'), shown = -1;
+    Array.prototype.forEach.call(rail.querySelectorAll('button'), function (btn, i) {
+      btn.addEventListener('click', function () {
+        var el = order[i].els[0];
+        if (root.classList.contains('presenting')) go(slides.indexOf(el));
+        else if (lenis) lenis.scrollTo(el);
+        else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      });
+    });
+    var railTick = function () {
+      var vh = W.innerHeight, mid = vh * 0.5, cur = 0;
+      var top0 = order[0].els[0].getBoundingClientRect().top;
+      var lastC = order[order.length - 1], bot = lastC.els[lastC.els.length - 1].getBoundingClientRect().bottom;
+      rail.classList.toggle('on', top0 < vh * 0.6 && bot > vh * 0.4);
+      order.forEach(function (c, i) {
+        var t = c.els[0].getBoundingClientRect().top, b = c.els[c.els.length - 1].getBoundingClientRect().bottom;
+        bars[i].style.setProperty('--f', Math.min(1, Math.max(0, (mid - t) / Math.max(1, b - t))).toFixed(3));
+        if (t <= mid) cur = i;
+      });
+      if (cur !== shown) { shown = cur; tB.textContent = pad(order[cur].n); tS.textContent = order[cur].name; }
+    };
+    W.addEventListener('scroll', railTick, { passive: true });
+    W.addEventListener('resize', railTick);
+    W.addEventListener('load', railTick);
+    railTick();
+  }
   if (presentURL) start(false);
 })();

@@ -592,3 +592,34 @@ html.presenting .psum-i { padding: 2.2vh 0; }
   .jrow img:first-child { flex-basis: 100% !important; }
 }
 html.presenting .jrow { margin-top: 5vh; }
+
+/* ================================================================ story-led case: chapter labels and the chapter rail */
+.ch-n { font-weight: 500; font-variant-numeric: tabular-nums; display: inline-flex; align-items: center; }
+.ch-n::after { content: ""; width: 24px; height: 1px; background: currentColor; margin: 0 12px; opacity: .6; }
+.slide.opener .s-h { font-size: var(--h4); letter-spacing: var(--h4ls); line-height: 1.2em; max-width: 14ch; }
+.slide.opener .s-p { font-size: var(--b3); max-width: 30em; margin-top: 40px; }
+
+.chrail { position: fixed; left: 2.5vw; top: 50%; z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 14px; color: #fff; mix-blend-mode: difference;
+  transform: translate(-50%, -50%); opacity: 0; pointer-events: none; transition: opacity .4s ease; }
+.chrail.on { opacity: 1; pointer-events: auto; }
+.chrail-s { display: flex; flex-direction: column; gap: 4px; }
+.chrail-s button { width: 22px; height: 40px; padding: 0 10px; display: block; }
+.chrail-s button i { display: block; width: 2px; height: 100%; background: rgba(255, 255, 255, .32); position: relative; overflow: hidden; }
+.chrail-s button i::after { content: ""; position: absolute; inset: 0; background: #fff; transform: scaleY(var(--f, 0)); transform-origin: center top; }
+.chrail-t { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 12px; line-height: 1; letter-spacing: .3px; white-space: nowrap; }
+.chrail-t b { font-weight: 500; font-variant-numeric: tabular-nums; }
+.chrail-t span { writing-mode: vertical-rl; }
+/* phones and tablets: a thin line across the top of the screen instead */
+@media (max-width: 1199.98px) {
+  .chrail { display: flex; left: 0; right: 0; top: 0; transform: none; flex-direction: row; }
+  .chrail-s { flex-direction: row; width: 100%; gap: 3px; }
+  .chrail-s button { flex: 1; width: auto; height: 3px; padding: 0; }
+  .chrail-s button i { width: 100%; height: 3px; }
+  .chrail-s button i::after { transform: scaleX(var(--f, 0)); transform-origin: left center; }
+  .chrail-t { display: none; }
+}
+html.presenting .chrail { left: 2.5vw; }
+html.presenting .slide[data-ch]:not(.opener) .s-p, html.presenting .slide[data-ch] .note { display: none; }
+html.presenting .slide[data-ch] .s-h { max-width: 28ch; }
+html.presenting .slide[data-ch] .ba { max-width: calc(56vh * 1.6); }
+@media (prefers-reduced-motion: reduce) { .chrail { transition: none; } }

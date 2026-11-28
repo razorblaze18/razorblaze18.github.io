@@ -633,3 +633,23 @@ html.presenting .slide[data-ch] .ba { max-width: calc(56vh * 1.6); }
 @media (max-width: 809.98px) { .sides { grid-template-columns: 1fr; gap: 40px; margin-top: 40px; } .sides li { padding: 14px 0; } }
 html.presenting .sides { margin-top: 5vh; }
 html.presenting .sides li { padding: 1.4vh 0; }
+
+/* a design system shown live: type in the real fonts, swatches with contrast, the rules it keeps */
+.ds { margin-top: 72px; display: flex; flex-direction: column; gap: 56px; }
+.ds-type { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.ds-f { display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, .16); }
+.ds-s { font-size: clamp(30px, 3.4vw, 52px); line-height: 1.1; color: var(--fg); }
+.ds-f .t-b6 { opacity: .64; } .ds-f b { font-weight: 500; opacity: 1; margin-right: 6px; }
+.ds-cols { display: grid; grid-template-columns: repeat(7, 1fr); gap: 16px; }
+.ds-c i { display: block; aspect-ratio: 1 / 1; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); margin-bottom: 12px; }
+.ds-c span { opacity: .72; display: block; } .ds-c b { font-weight: 500; }
+.ds-rules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.ds-rules li { padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, .16); }
+@media (max-width: 1199.98px) { .ds-cols { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 809.98px) {
+  .ds { margin-top: 40px; gap: 40px; }
+  .ds-type, .ds-rules { grid-template-columns: 1fr; gap: 20px; }
+  .ds-cols { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+}
+html.presenting .ds { margin-top: 4vh; gap: 4vh; }
+html.presenting .ds-c i { aspect-ratio: auto; height: 9vh; }

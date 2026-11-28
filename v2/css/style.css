@@ -575,3 +575,20 @@ html.motion .hero-tag .tag:not(.lined) { opacity: 0; }
   .track { transform: none !important; flex-wrap: wrap; width: 90%; gap: 48px; }
   .proc-trigger { display: none; }
 }
+
+/* Problem / What I did / Result, under the lede */
+.psum { width: 100%; margin: 0; display: flex; flex-direction: column; }
+.psum-i { padding: 28px 0; border-top: 1px solid rgba(255, 255, 255, .16); display: grid; grid-template-columns: 9.5em 1fr; gap: 32px; align-items: baseline; }
+.psum-i:last-child { border-bottom: 1px solid rgba(255, 255, 255, .16); }
+.psum dt { opacity: .56; }
+.psum dd { margin: 0; }
+.psum-i:last-child dd { color: var(--white); }
+@media (max-width: 1199.98px) { .psum-i { grid-template-columns: 1fr; gap: 8px; padding: 22px 0; } }
+html.presenting .psum-i { padding: 2.2vh 0; }
+.jrow { display: flex; gap: 24px; margin-top: 80px; align-items: flex-start; }
+.jrow img { min-width: 0; width: 100%; height: auto; }
+@media (max-width: 809.98px) {
+  .jrow { flex-wrap: wrap; gap: 12px; margin-top: 48px; }
+  .jrow img:first-child { flex-basis: 100% !important; }
+}
+html.presenting .jrow { margin-top: 5vh; }

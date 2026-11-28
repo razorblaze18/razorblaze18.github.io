@@ -623,3 +623,13 @@ html.presenting .slide[data-ch]:not(.opener) .s-p, html.presenting .slide[data-c
 html.presenting .slide[data-ch] .s-h { max-width: 28ch; }
 html.presenting .slide[data-ch] .ba { max-width: calc(56vh * 1.6); }
 @media (prefers-reduced-motion: reduce) { .chrail { transition: none; } }
+
+/* two lists side by side: what was broken for guests, and for staff */
+.sides { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 72px; }
+.sides h3 { font-weight: 500; padding-bottom: 16px; border-bottom: 1px solid currentColor; }
+.sides ul { list-style: none; margin: 0; padding: 0; }
+.sides li { padding: 18px 0; border-bottom: 1px solid rgba(26, 26, 26, .16); }
+.slide.dark .sides li { border-bottom-color: rgba(255, 255, 255, .16); }
+@media (max-width: 809.98px) { .sides { grid-template-columns: 1fr; gap: 40px; margin-top: 40px; } .sides li { padding: 14px 0; } }
+html.presenting .sides { margin-top: 5vh; }
+html.presenting .sides li { padding: 1.4vh 0; }
